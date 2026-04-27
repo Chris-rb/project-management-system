@@ -20,7 +20,8 @@ export const useRequirementsData = ({id = null}: Props = {}) => {
         mutationFn: ({ newRequirement } : { newRequirement : CreateRequirementDto}) => createNewRequirement(id!, newRequirement),
         onSuccess: async () => {
             console.log("successfully added a new requirement");
-            await queryClient.invalidateQueries({queryKey: ["requirements"]})
+            await queryClient.invalidateQueries({queryKey: ["requirements"]});
+            toast.success("successfully added a new requirement");
         },
         onError: (error: Error) => {
             console.error(`Error occured attempting to create a requirement: ${error}`);
