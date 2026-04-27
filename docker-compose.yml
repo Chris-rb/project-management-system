@@ -29,7 +29,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__DefaultConnection: Server=db;Database=${DB_NAME};User=${DB_USER};Password=${DB_PASSWORD};
+      ConnectionStrings__DefaultConnection: Server=db;Database=${DB_NAME};User=${DB_USER};Password=${DB_PASSWORD};ConnectionReset=false;KeepAlive=60;MaxPoolSize=100;
     depends_on:
       db:
         condition: service_healthy
