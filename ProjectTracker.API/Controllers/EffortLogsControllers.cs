@@ -81,7 +81,7 @@ public class EffortLogsController : ControllerBase
 
         try
         {
-            var savedChanges = _db.SaveChangesAsync();
+            var savedChanges = await _db.SaveChangesAsync();
 
             var effortLog = new EffortLogDto(
                 Id: newEffortLog.Id,
