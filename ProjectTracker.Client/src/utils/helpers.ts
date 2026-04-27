@@ -20,3 +20,5 @@ export const parseEffortLog = (log: EffortLogDto): EffortLogDto => ({
     ...log,
     logDate: new Date(log.logDate),
 });
+
+export const formatTableHours = (hours: number | undefined): string | number => hours && hours > 0 ? hours : "-";
