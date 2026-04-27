@@ -1,0 +1,61 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: projecttracker_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # No ports exposed — only accessible inside Docker network
+
+  api:
+    build:
+      context: .
+      dockerfile: ProjectTracker.API/Dockerfile
+    container_name: projecttracker_api
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=db;Database=${DB_NAME};User=${DB_USER};Password=${DB_PASSWORD};
+    depends_on:
+      db:
+        condition: service_healthy
+    # No ports exposed — only accessible inside Docker network
+
+  client_build:
+    build:
+      context: ./ProjectTracker.Client
+      dockerfile: Dockerfile
+      target: export          # only runs the build stage
+    volumes:
+      - client_dist:/dist     # puts built files into a shared volume
+
+  nginx:
+    image: nginx:alpine
+    container_name: projecttracker_nginx
+    restart: always
+    ports:
+      - "8000:80"               # map to 8000 instead
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - client_dist:/usr/share/nginx/html:ro    # serves React build
+    depends_on:
+      - api
+      - client_build
+
+volumes:
+  mysql_data:
+  client_dist:               # shared between client_build and nginx
