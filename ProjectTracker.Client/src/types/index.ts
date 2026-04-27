@@ -187,4 +187,44 @@ export const PhaseColors: Record<EffortType, Record<string, string>> = {
         bg: "bg-red-400", 
         border: "border-red-400" 
     }
+    
+};
+
+export const RiskStatusColors: Record<RiskStatus, Record<string, string>> = {
+    "Open": {
+        text: "text-blue-500",
+        bgOpaque: "bg-blue-500/20",
+        bg: "bg-blue-500",
+        border: "border-blue-500"
+    },
+    "Identified": {
+        text: "text-amber-500",
+        bgOpaque: "bg-amber-500/20",
+        bg: "bg-amber-500",
+        border: "border-amber-500"
+    },
+    "Mitigated": {
+        text: "text-emerald-500",
+        bgOpaque: "bg-emerald-500/20",
+        bg: "bg-emerald-500",
+        border: "border-emerald-500"
+    },
+    "Occured": {
+        text: "text-orange-500",
+        bgOpaque: "bg-orange-500/20",
+        bg: "bg-orange-500",
+        border: "border-orange-500"
+    },
+    "Escalated": {
+        text: "text-red-500",
+        bgOpaque: "bg-red-500/20",
+        bg: "bg-red-500",
+        border: "border-red-500"
+    },
+    "Closed": {
+        text: "text-gray-500",
+        bgOpaque: "bg-gray-500/20",
+        bg: "bg-gray-500",
+        border: "border-gray-500"
+    }
 };
