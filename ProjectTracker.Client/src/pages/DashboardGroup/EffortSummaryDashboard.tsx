@@ -18,7 +18,12 @@ import { ChartBarIcon } from "lucide-react";
 
 const EffortSummaryDashboard = () => {
     const { projectMetaData } = useProjectMetaData();
-    const { effortLogsSummary, effortLogsReqBreakdown } = useProjectsData({id: projectMetaData?.id});
+    const { 
+        effortLogsSummary, 
+        loadingEffortLogsSummary, 
+        effortLogsReqBreakdown, 
+        loadingEffortLogsReqBreakdown 
+    } = useProjectsData({id: projectMetaData?.id});
 
     const getPercentage = (hours: number): string => {
         if ( !hours || !effortLogsSummary?.totalAggregatedHours || effortLogsSummary.totalAggregatedHours === 0) return "0.0%";
@@ -56,7 +61,7 @@ const EffortSummaryDashboard = () => {
                     <span className="text-xs">Total Hours</span>
                 </div>
             </div>
-            {
+            {loadingEffortLogsSummary ? null :
                 effortLogsSummary &&
                 <div className="flex flex-col p-5 bg-card border border-border rounded-2xl mt-4">
                     <span className="text-muted-foreground">PHASE DISTRIBUTION</span>
@@ -119,7 +124,7 @@ const EffortSummaryDashboard = () => {
             }
             <div className="flex flex-col min-w-100 min-h-45 mt-4 p-4 bg-card border border-border rounded-3xl">
                 <span className="place-self-start text-muted-foreground">BREAKDOWN BY REQUIREMENT</span>
-                {
+                {loadingEffortLogsReqBreakdown ? null :
                     effortLogsReqBreakdown?.length ? 
                     <div className="mt-3">
                         <Table className="overflow-hidden">

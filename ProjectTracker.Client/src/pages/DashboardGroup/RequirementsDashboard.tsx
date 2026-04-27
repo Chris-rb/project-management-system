@@ -26,7 +26,7 @@ const RequirementsDashboard = () => {
     const [newRequirementType, setNewRequirementType] = useState<RequirementsType | null>(null);
 
     const { projectMetaData } = useProjectMetaData();
-    const { projectRequirements, createRequirement } = useRequirementsData({id: projectMetaData?.id});
+    const { projectRequirements, loadingProjectRequirements, createRequirement } = useRequirementsData({id: projectMetaData?.id});
 
     const [funcRequirements, nonFuncRequirements] = useMemo(() => {
         console.log(projectRequirements);
@@ -147,7 +147,8 @@ const RequirementsDashboard = () => {
                         <Badge className="bg-primary/60 text-sidebar-primary">{funcRequirements.length}</Badge>
                     </div>
                     <div className="flex flex-col h-full justify-center items-center">
-                        {funcRequirements.length ?
+                        {loadingProjectRequirements ? null :
+                        funcRequirements.length ?
                             <div className="flex flex-col gap-3 h-full max-h-100 w-full mt-3 overflow-y-auto [scrollbar-width:thin]">
                                 {funcRequirements.map((req, idx) => {
 
@@ -181,7 +182,8 @@ const RequirementsDashboard = () => {
                         <Badge className="bg-primary/60 text-sidebar-primary">{nonFuncRequirements.length}</Badge>
                     </div>
                     <div className="flex flex-col h-full justify-center items-center">
-                        {nonFuncRequirements.length ?
+                        {loadingProjectRequirements ? null :
+                        nonFuncRequirements.length ?
                             <div className="flex flex-col gap-3 h-full max-h-100 w-full mt-3 overflow-y-auto [scrollbar-width:thin]">
                                 {nonFuncRequirements.map((req, idx) => {
 
