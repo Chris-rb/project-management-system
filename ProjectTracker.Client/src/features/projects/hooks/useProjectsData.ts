@@ -31,7 +31,8 @@ export const useProjectsData = ({email = null, id = null}: Props = {}) => {
         mutationFn: ({ newProject } : { newProject: CreateProjectDto }) => createProject(newProject),
         onSuccess: async () => {
             console.log("successfully created a project");
-            await queryClient.invalidateQueries({ queryKey: ["projects"] })
+            await queryClient.invalidateQueries({ queryKey: ["projects", "email"] });
+            toast.success("successfully created a project")
         },
         onError: (error: Error) => {
             console.error(`Error occured attempting to create a project: ${error}`);
@@ -43,7 +44,7 @@ export const useProjectsData = ({email = null, id = null}: Props = {}) => {
 
     // update to handle query keys in dict
     const getProjectsByEmailQuery = useQuery({
-        queryKey: ["projects", email],
+        queryKey: ["projects", "email"],
         queryFn: () => getProjectsByEmail(email!),
         enabled: !!email
     })
@@ -52,7 +53,8 @@ export const useProjectsData = ({email = null, id = null}: Props = {}) => {
         mutationFn: ({ newMemberRequest } : { newMemberRequest: AddMemberToProjectDto}) => addMemberToProject(id!, newMemberRequest),
         onSuccess: async () => {
             console.log("successfully added a new member");
-            await queryClient.invalidateQueries({ queryKey: ["projects", id] })
+            await queryClient.invalidateQueries({ queryKey: ["projects", id] });
+            toast.success("successfully added a new member");
         },
         onError: (error: Error) => {
             console.log(`Error occured attempting to add member to project: ${error}`);
@@ -66,7 +68,8 @@ export const useProjectsData = ({email = null, id = null}: Props = {}) => {
         mutationFn: ({ newRisk }: { newRisk: CreateRiskDto }) => addRiskToProject(id!, newRisk),
         onSuccess: async () => {
             console.log("successfully added a new risk");
-            await queryClient.invalidateQueries({queryKey: ["projects", id]})
+            await queryClient.invalidateQueries({queryKey: ["projects", id]});
+            toast.success("successfully added a new risk");
         },
         onError: (error: Error) => {
             console.error(`Error occured attempting to add risk to project: ${error}`)

@@ -21,7 +21,8 @@ export const useEffortLogsData = ({ requirementId = null }: Props = {}) => {
         mutationFn: ({ newEffortLog } : { newEffortLog: CreateEffortLogDto }) => createNewEffortLog(requirementId!, newEffortLog),
         onSuccess: async () => {
             console.log("successfully created a new effort log");
-            queryClient.invalidateQueries({queryKey: ["effort-logs"]})
+            queryClient.invalidateQueries({queryKey: ["effort-logs", "all"]});
+            toast.success("successfully added a new Effort Log");
         },
         onError: (error: Error) => {
             console.error(`Error occured attempting to add effort log to requirement: ${error}`);

@@ -52,9 +52,8 @@ const NewProjectDialog = ( { closeDialog }: Props ) => {
 
         try {
             const resp = await createProject({ newProject });
-            console.log("FFFAaAAAA", resp);
             if (resp) {
-                console.log("YOOOOO", resp);
+                console.log(resp);
                 closeDialog();
             }
         }
