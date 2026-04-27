@@ -31,18 +31,18 @@ public class EffortLogsController : ControllerBase
         }
 
         var effortLogs = requirement
-            .EffortLogs.Select(el => new EffortLogDto(
-                el.Id,
-                el.RequirementId,
-                el.RequirementTitle,
-                el.LogDate,
-                el.RequirementsAnalysisHours,
-                el.DesignHours,
-                el.CodingHours,
-                el.TestingHours,
-                el.ProjectManagementHours,
-                el.TotalHours,
-                el?.Notes
+            .EffortLogs.Select(ef => new EffortLogDto(
+                Id: ef.Id,
+                RequirementId: ef.RequirementId,
+                RequirementTitle: ef.RequirementTitle,
+                LogDate: ef.LogDate,
+                RequirementsAnalysisHours: ef.RequirementsAnalysisHours,
+                DesignHours: ef.DesignHours,
+                CodingHours: ef.CodingHours,
+                TestingHours: ef.TestingHours,
+                ProjectManagementHours: ef.ProjectManagementHours,
+                TotalHours: ef.TotalHours,
+                Notes: ef?.Notes
             ))
             .ToList();
 
@@ -84,17 +84,17 @@ public class EffortLogsController : ControllerBase
             var savedChanges = _db.SaveChangesAsync();
 
             var effortLog = new EffortLogDto(
-                newEffortLog.Id,
-                requirementId,
-                newEffortLog.RequirementTitle,
-                newEffortLog.LogDate,
-                newEffortLog.RequirementsAnalysisHours,
-                newEffortLog.DesignHours,
-                newEffortLog.CodingHours,
-                newEffortLog.TestingHours,
-                newEffortLog.ProjectManagementHours,
-                newEffortLog.TotalHours,
-                newEffortLog?.Notes
+                Id: newEffortLog.Id,
+                RequirementId: requirementId,
+                RequirementTitle: newEffortLog.RequirementTitle,
+                LogDate: newEffortLog.LogDate,
+                RequirementsAnalysisHours: newEffortLog.RequirementsAnalysisHours,
+                DesignHours: newEffortLog.DesignHours,
+                CodingHours: newEffortLog.CodingHours,
+                TestingHours: newEffortLog.TestingHours,
+                ProjectManagementHours: newEffortLog.ProjectManagementHours,
+                TotalHours: newEffortLog.TotalHours,
+                Notes: newEffortLog?.Notes
             );
 
             return Ok(effortLog);
