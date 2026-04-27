@@ -9,6 +9,7 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Slider } from "@/components/ui/slider";
+import { formatTableHours } from "@/utils/helpers";
 import { useProjectMetaData } from "@/context/ProjectContext";
 import { useProjectsData } from "@/features/projects/hooks/useProjectsData";
 import { EffortTypeArray, mapEffortType, PhaseColors } from "@/types";
@@ -17,16 +18,15 @@ import { ChartBarIcon } from "lucide-react";
 
 const EffortSummaryDashboard = () => {
     const { projectMetaData } = useProjectMetaData();
-    const { effortLogsSummary, effortLogsReqBreakdown, loadingEffortLogsReqBreakdown } = useProjectsData({id: projectMetaData?.id});
+    const { effortLogsSummary, effortLogsReqBreakdown } = useProjectsData({id: projectMetaData?.id});
 
     const getPercentage = (hours: number): string => {
         if ( !hours || !effortLogsSummary?.totalAggregatedHours || effortLogsSummary.totalAggregatedHours === 0) return "0.0%";
         return `${(hours / effortLogsSummary.totalAggregatedHours * 100).toFixed(1)}%` ;
     }
 
-    const formatHours = (hours: number | null | undefined): string => {
-        return (hours ?? 0).toFixed(1);
-    }
+    const formatHours = (hours: number | null | undefined): string => (hours ?? 0).toFixed(1);
+    
 
     return (
         <div className="max-w-255 w-full mt-28">
@@ -120,65 +120,62 @@ const EffortSummaryDashboard = () => {
             <div className="flex flex-col min-w-100 min-h-45 mt-4 p-4 bg-card border border-border rounded-3xl">
                 <span className="place-self-start text-muted-foreground">BREAKDOWN BY REQUIREMENT</span>
                 {
-                    loadingEffortLogsReqBreakdown ? null :
-                    (
-                        effortLogsReqBreakdown?.length ? 
-                            <div className="mt-3">
-                                <Table className="overflow-hidden">
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead className="text-ring">REQUIREMENT</TableHead>
-                                            <TableHead className="text-ring">TYPE</TableHead>
-                                            <TableHead className="text-ring">ANALYSIS</TableHead>
-                                            <TableHead className="text-ring">DESIGN</TableHead>
-                                            <TableHead className="text-ring">CODING</TableHead>
-                                            <TableHead className="text-ring">TESTING</TableHead>
-                                            <TableHead className="text-ring">MGMT</TableHead>
-                                            <TableHead className="text-ring">TOTAL</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {
-                                            effortLogsReqBreakdown.map((reqEffort, idx) => {
-                                                return (
-                                                    <TableRow key={idx}>
-                                                        <TableCell>{reqEffort.requirementTitle}</TableCell>
-                                                        <TableCell>
-                                                            <Badge>
-                                                                {reqEffort.type === "Functional" ? 'F' : 'N'}
-                                                            </Badge>
-                                                        </TableCell>
-                                                        <TableCell className={`${PhaseColors["Requirements Analysis"]["text"]}`}>{formatHours(reqEffort.totalReqAnalysisHours)}</TableCell>
-                                                        <TableCell className={`${PhaseColors["Design"]["text"]}`}>{formatHours(reqEffort.totalDesignHours)}</TableCell>
-                                                        <TableCell className={`${PhaseColors["Coding"]["text"]}`}>{formatHours(reqEffort.totalCodingHours)}</TableCell>
-                                                        <TableCell className={`${PhaseColors["Testing"]["text"]}`}>{formatHours(reqEffort.totalTestingHours)}</TableCell>
-                                                        <TableCell className={`${PhaseColors["Project Management"]["text"]}`}>{formatHours(reqEffort.totalProjMgmtHours)}</TableCell>
-                                                        <TableCell>{formatHours(reqEffort.totalAggregatedHours)}</TableCell>
-                                                    </TableRow>
-                                                );
-                                            })
-                                        }
-                                    </TableBody>
-                                    <TableFooter className="bg-background">
-                                        <TableRow>
-                                            <TableCell>TOTAL</TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell className={`${PhaseColors["Requirements Analysis"]["text"]}`}>{formatHours(effortLogsSummary?.totalReqAnalysisHours)}</TableCell>
-                                            <TableCell className={`${PhaseColors["Design"]["text"]}`}>{formatHours(effortLogsSummary?.totalDesignHours)}</TableCell>
-                                            <TableCell className={`${PhaseColors["Coding"]["text"]}`}>{formatHours(effortLogsSummary?.totalCodingHours)}</TableCell>
-                                            <TableCell className={`${PhaseColors["Testing"]["text"]}`}>{formatHours(effortLogsSummary?.totalTestingHours)}</TableCell>
-                                            <TableCell className={`${PhaseColors["Project Management"]["text"]}`}>{formatHours(effortLogsSummary?.totalProjMgmtHours)}</TableCell>
-                                            <TableCell>{formatHours(effortLogsSummary?.totalAggregatedHours)}</TableCell>
-                                        </TableRow>
-                                    </TableFooter>
-                                </Table>
-                            </div>
-                            :
-                            <div className="flex flex-col justify-center items-center h-30">
-                                <ChartBarIcon />
-                                <span>Add requirements and log effort to see breadkdown</span>
-                            </div>
-                    )
+                    effortLogsReqBreakdown?.length ? 
+                    <div className="mt-3">
+                        <Table className="overflow-hidden">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="text-ring">REQUIREMENT</TableHead>
+                                    <TableHead className="text-ring">TYPE</TableHead>
+                                    <TableHead className="text-ring">ANALYSIS</TableHead>
+                                    <TableHead className="text-ring">DESIGN</TableHead>
+                                    <TableHead className="text-ring">CODING</TableHead>
+                                    <TableHead className="text-ring">TESTING</TableHead>
+                                    <TableHead className="text-ring">MGMT</TableHead>
+                                    <TableHead className="text-ring">TOTAL</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {
+                                    effortLogsReqBreakdown.map((reqEffort, idx) => {
+                                        return (
+                                            <TableRow key={idx}>
+                                                <TableCell>{reqEffort.requirementTitle}</TableCell>
+                                                <TableCell>
+                                                    <Badge>
+                                                        {reqEffort.type === "Functional" ? 'F' : 'N'}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className={`${PhaseColors["Requirements Analysis"]["text"]}`}>{formatTableHours(reqEffort.totalReqAnalysisHours)}</TableCell>
+                                                <TableCell className={`${PhaseColors["Design"]["text"]}`}>{formatTableHours(reqEffort.totalDesignHours)}</TableCell>
+                                                <TableCell className={`${PhaseColors["Coding"]["text"]}`}>{formatTableHours(reqEffort.totalCodingHours)}</TableCell>
+                                                <TableCell className={`${PhaseColors["Testing"]["text"]}`}>{formatTableHours(reqEffort.totalTestingHours)}</TableCell>
+                                                <TableCell className={`${PhaseColors["Project Management"]["text"]}`}>{formatTableHours(reqEffort.totalProjMgmtHours)}</TableCell>
+                                                <TableCell>{formatTableHours(reqEffort.totalAggregatedHours)}</TableCell>
+                                            </TableRow>
+                                        );
+                                    })
+                                }
+                            </TableBody>
+                            <TableFooter className="bg-background">
+                                <TableRow>
+                                    <TableCell>TOTAL</TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell className={`${PhaseColors["Requirements Analysis"]["text"]}`}>{formatTableHours(effortLogsSummary?.totalReqAnalysisHours)}</TableCell>
+                                    <TableCell className={`${PhaseColors["Design"]["text"]}`}>{formatTableHours(effortLogsSummary?.totalDesignHours)}</TableCell>
+                                    <TableCell className={`${PhaseColors["Coding"]["text"]}`}>{formatTableHours(effortLogsSummary?.totalCodingHours)}</TableCell>
+                                    <TableCell className={`${PhaseColors["Testing"]["text"]}`}>{formatTableHours(effortLogsSummary?.totalTestingHours)}</TableCell>
+                                    <TableCell className={`${PhaseColors["Project Management"]["text"]}`}>{formatTableHours(effortLogsSummary?.totalProjMgmtHours)}</TableCell>
+                                    <TableCell>{formatTableHours(effortLogsSummary?.totalAggregatedHours)}</TableCell>
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </div>
+                    :
+                    <div className="flex flex-col justify-center items-center h-30">
+                        <ChartBarIcon />
+                        <span>Add requirements and log effort to see breadkdown</span>
+                    </div>
                 }
             </div>
         </div>

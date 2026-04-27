@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar1Icon, AlertTriangleIcon } from "lucide-react";
 import { EffortTypeArray, PhaseColors } from "@/types";
 import type { EffortType, CreateEffortLogDto } from "@/types";
+import { formatTableHours } from "@/utils/helpers";
 import { useProjectMetaData } from "@/context/ProjectContext";
 import { useRequirementsData } from "@/features/requirements/hooks/useRequirementsData";
 import { useEffortLogsData } from "@/features/effort-logs/hooks/useEffortLogsData";
@@ -189,7 +190,7 @@ const EffortLogDashboard = () => {
                     {EffortTypeArray.map((effortType, idx) => {
                         return (
                             <div key={idx} className="col-span-3">
-                                <Label className={`pb-2 text-${PhaseColors[effortType as EffortType]["text"]}`}>
+                                <Label className={`pb-2 ${PhaseColors[effortType as EffortType]["text"]}`}>
                                     {effortType}
                                 </Label>
                                 <Input 
@@ -231,17 +232,18 @@ const EffortLogDashboard = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {allEffortLogs.map((eLog, idx) => {
+                            {allEffortLogs.sort((a, b) => a.logDate.getTime() - b.logDate.getTime())
+                                .map((eLog, idx) => {
                                 return (
                                     <TableRow key={idx}>
                                         <TableCell>{eLog.logDate.toLocaleDateString()}</TableCell>
                                         <TableCell colSpan={5}>{eLog.requirementTitle}</TableCell>
-                                        <TableCell>{eLog.requirementsAnalysisHours}</TableCell>
-                                        <TableCell>{eLog.designHours}</TableCell>
-                                        <TableCell>{eLog.codingHours}</TableCell>
-                                        <TableCell>{eLog.testingHours}</TableCell>
-                                        <TableCell>{eLog.projectManagementHours}</TableCell>
-                                        <TableCell className="text-sidebar-primary">{eLog.totalHours}</TableCell>
+                                        <TableCell>{formatTableHours(eLog.requirementsAnalysisHours)}</TableCell>
+                                        <TableCell>{formatTableHours(eLog.designHours)}</TableCell>
+                                        <TableCell>{formatTableHours(eLog.codingHours)}</TableCell>
+                                        <TableCell>{formatTableHours(eLog.testingHours)}</TableCell>
+                                        <TableCell>{formatTableHours(eLog.projectManagementHours)}</TableCell>
+                                        <TableCell className="text-sidebar-primary">{formatTableHours(eLog.totalHours)}</TableCell>
                                     </TableRow>
                                 );
                             })}

@@ -1,15 +1,19 @@
 import { useAuth } from "@/context/AuthContext";
 import { useProjectMetaData } from "@/context/ProjectContext";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-// import type { UserDto } from "@/types";
 
 
 const Navbar = () => {
     const { user, clearAuthUser } = useAuth();
     const { clearProject } = useProjectMetaData();
+
     const navigate = useNavigate();
+
+    const navToProjectHub = () => {
+        navigate("/project-hub");
+    }
 
     const handleLogout = () => {
         clearAuthUser();
@@ -25,7 +29,7 @@ const Navbar = () => {
                         bg-primary/50 border-b-2 border-sidebar-primary"
         >
             <div className="flex flex-row items-center pl-5">
-                <img className="w-10" src={logoUrl} alt="Logo" />
+                <img className="w-10" src={logoUrl} alt="Logo" onClick={() => navToProjectHub()}/>
                 <div className="pl-2 font-bold">
                     OnTrack
                 </div>

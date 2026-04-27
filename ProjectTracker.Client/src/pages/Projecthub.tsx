@@ -79,7 +79,7 @@ const ProjectHubPage = () => {
         <div className="flex flex-col gap-3 min-w-3/5 mt-28">
             <div className="flex flex-row items-end justify-between">
                 <div className="flex flex-col">
-                    <p>{formattedDate.toLocaleUpperCase()}</p>
+                    <p className="text-muted-foreground">{formattedDate.toLocaleUpperCase()}</p>
                     <p className="text-2xl">{`Welcome, ${user?.firstName}`}</p>
                 </div>
                 <Dialog open={openDialog} onOpenChange={setOpenDialog}>
