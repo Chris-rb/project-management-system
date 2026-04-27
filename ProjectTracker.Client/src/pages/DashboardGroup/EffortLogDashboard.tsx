@@ -28,6 +28,7 @@ import { useProjectMetaData } from "@/context/ProjectContext";
 import { useRequirementsData } from "@/features/requirements/hooks/useRequirementsData";
 import { useEffortLogsData } from "@/features/effort-logs/hooks/useEffortLogsData";
 import { useProjectsData } from "@/features/projects/hooks/useProjectsData"; 
+import { toast } from "sonner";
 
 
 const EffortLogDashboard = () => {
@@ -67,12 +68,12 @@ const EffortLogDashboard = () => {
 
     const handleCreateEffortLog = async () => {
         if (requirementId == null) {
-            console.error("No requirement was selected")
+            toast.error("No requirement was selected");
             return
         }
 
         if (effortDate == undefined) {
-            console.error("Effort log date is invalid")
+            toast.error("Effort log date is invalid");
             return;
         }
 
