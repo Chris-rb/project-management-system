@@ -33,56 +33,59 @@ public class ProjectsController : ControllerBase
             .Include(p => p.Risks)
             .Include(p => p.Requirements)
                 .ThenInclude(r => r.EffortLogs)
-            .Select(p => new ProjectDto(
-                p.Id,
-                p.ProjectName,
-                p.Description,
-                p.CreatedDate,
-                p.ProjectAssignments.Select(pa => new ProjectMemberDto(
-                        pa.ProjectId,
-                        pa.MemberId,
-                        pa.Role,
-                        pa.IsActive,
-                        pa.User.FirstName,
-                        pa.User.LastName,
-                        pa.User.EmailAddress,
-                        pa.CreatedDate
-                    ))
-                    .ToList(),
-                p.Requirements.Select(r => new RequirementDto(
-                        r.Id,
-                        r.ProjectId,
-                        r.Title,
-                        r.Description,
-                        r.Type,
-                        r.Complete,
-                        r.EffortLogs.Select(ef => new EffortLogDto(
-                                ef.Id,
-                                ef.RequirementId,
-                                ef.RequirementTitle,
-                                ef.LogDate,
-                                ef.RequirementsAnalysisHours,
-                                ef.DesignHours,
-                                ef.CodingHours,
-                                ef.TestingHours,
-                                ef.ProjectManagementHours,
-                                ef.TotalHours,
-                                ef.Notes
-                            ))
-                            .ToList()
-                    ))
-                    .ToList(),
-                p.Risks.Select(r => new RiskDto(r.Id, r.ProjectId, r.Description, r.Status))
-                    .ToList(),
-                p.ModifiedDate
-            ))
             .FirstOrDefaultAsync();
 
         if (project is null)
-        {
             return NotFound($"No project found with Id: {id}");
-        }
-        return Ok(project);
+
+        var projectDto = new ProjectDto(
+            project.Id,
+            project.ProjectName,
+            project.Description,
+            project.CreatedDate,
+            project
+                .ProjectAssignments.Select(pa => new ProjectMemberDto(
+                    pa.ProjectId,
+                    pa.MemberId,
+                    pa.Role,
+                    pa.IsActive,
+                    pa.User.FirstName,
+                    pa.User.LastName,
+                    pa.User.EmailAddress,
+                    pa.CreatedDate
+                ))
+                .ToList(),
+            project
+                .Requirements.Select(r => new RequirementDto(
+                    r.Id,
+                    r.ProjectId,
+                    r.Title,
+                    r.Description,
+                    r.Type,
+                    r.Complete,
+                    r.EffortLogs.Select(ef => new EffortLogDto(
+                            Id: ef.Id,
+                            RequirementId: ef.RequirementId,
+                            RequirementTitle: ef.RequirementTitle,
+                            LogDate: ef.LogDate,
+                            RequirementsAnalysisHours: ef.RequirementsAnalysisHours,
+                            DesignHours: ef.DesignHours,
+                            CodingHours: ef.CodingHours,
+                            TestingHours: ef.TestingHours,
+                            ProjectManagementHours: ef.ProjectManagementHours,
+                            TotalHours: ef.TotalHours,
+                            Notes: ef.Notes
+                        ))
+                        .ToList()
+                ))
+                .ToList(),
+            project
+                .Risks.Select(r => new RiskDto(r.Id, r.ProjectId, r.Description, r.Status))
+                .ToList(),
+            project.ModifiedDate
+        );
+
+        return Ok(projectDto);
     }
 
     // POST api/projects/new-project
@@ -243,17 +246,17 @@ public class ProjectsController : ControllerBase
                             r.Type,
                             r.Complete,
                             r.EffortLogs.Select(ef => new EffortLogDto(
-                                    ef.Id,
-                                    ef.RequirementId,
-                                    ef.RequirementTitle,
-                                    ef.LogDate,
-                                    ef.RequirementsAnalysisHours,
-                                    ef.DesignHours,
-                                    ef.CodingHours,
-                                    ef.TestingHours,
-                                    ef.ProjectManagementHours,
-                                    ef.TotalHours,
-                                    ef.Notes
+                                    Id: ef.Id,
+                                    RequirementId: ef.RequirementId,
+                                    RequirementTitle: ef.RequirementTitle,
+                                    LogDate: ef.LogDate,
+                                    RequirementsAnalysisHours: ef.RequirementsAnalysisHours,
+                                    DesignHours: ef.DesignHours,
+                                    CodingHours: ef.CodingHours,
+                                    TestingHours: ef.TestingHours,
+                                    ProjectManagementHours: ef.ProjectManagementHours,
+                                    TotalHours: ef.TotalHours,
+                                    Notes: ef.Notes
                                 ))
                                 .ToList()
                         ))
@@ -346,30 +349,31 @@ public class ProjectsController : ControllerBase
     [HttpGet("{projectId}/effort-logs")]
     public async Task<ActionResult<List<EffortLogDto>>> GetEffortLogsForProject(int projectId)
     {
-        var project = await _db.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
-        if (project is null)
+        var effortLogs = await _db
+            .EffortLogs.Where(ef => ef.Requirement.ProjectId == projectId)
+            .ToListAsync();
+
+        if (effortLogs is null)
         {
             return NotFound($"No project found with id {projectId}");
         }
 
-        var effortLogs = await _db
-            .EffortLogs.Where(ef => ef.Requirement.ProjectId == projectId)
-            .Select(ef => new EffortLogDto(
-                ef.Id,
-                ef.RequirementId,
-                ef.RequirementTitle,
-                ef.LogDate,
-                ef.RequirementsAnalysisHours,
-                ef.DesignHours,
-                ef.CodingHours,
-                ef.TestingHours,
-                ef.ProjectManagementHours,
-                ef.TotalHours,
-                ef.Notes
+        var effortLogsDto = effortLogs.Select(ef => new EffortLogDto(
+                Id: ef.Id,
+                RequirementId: ef.RequirementId,
+                RequirementTitle: ef.RequirementTitle,
+                LogDate: ef.LogDate,
+                RequirementsAnalysisHours: ef.RequirementsAnalysisHours,
+                DesignHours: ef.DesignHours,
+                CodingHours: ef.CodingHours,
+                TestingHours: ef.TestingHours,
+                ProjectManagementHours: ef.ProjectManagementHours,
+                TotalHours: ef.TotalHours,
+                Notes: ef.Notes
             ))
-            .ToListAsync();
+            .ToList();
 
-        return Ok(effortLogs);
+        return Ok(effortLogsDto);
     }
 
     [HttpGet("{projectId}/effort-logs-summary")]

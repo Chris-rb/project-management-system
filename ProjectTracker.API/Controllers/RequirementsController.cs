@@ -42,17 +42,17 @@ public class RequirementsController : ControllerBase
                 r.Type,
                 r.Complete,
                 r.EffortLogs.Select(el => new EffortLogDto(
-                        el.Id,
-                        el.RequirementId,
-                        el.RequirementTitle,
-                        el.LogDate,
-                        el.RequirementsAnalysisHours,
-                        el.DesignHours,
-                        el.CodingHours,
-                        el.TestingHours,
-                        el.ProjectManagementHours,
-                        el.TotalHours,
-                        el?.Notes
+                        Id: el.Id,
+                        RequirementId: el.RequirementId,
+                        RequirementTitle: el.RequirementTitle,
+                        LogDate: el.LogDate,
+                        RequirementsAnalysisHours: el.RequirementsAnalysisHours,
+                        DesignHours: el.DesignHours,
+                        CodingHours: el.CodingHours,
+                        TestingHours: el.TestingHours,
+                        ProjectManagementHours: el.ProjectManagementHours,
+                        TotalHours: el.TotalHours,
+                        Notes: el?.Notes
                     ))
                     .ToList()
             ))
