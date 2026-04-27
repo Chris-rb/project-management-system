@@ -1,0 +1,5 @@
+/Users/christopherbarrett/Projects/project-management-system/ProjectTracker.Core/obj/Debug/net10.0/ProjectTracker.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/christopherbarrett/Projects/project-management-system/ProjectTracker.Core/obj/Debug/net10.0/ProjectTracker.Core.AssemblyInfoInputs.cache
+/Users/christopherbarrett/Projects/project-management-system/ProjectTracker.Core/obj/Debug/net10.0/ProjectTracker.Core.AssemblyInfo.cs
+/Users/christopherbarrett/Projects/project-management-system/ProjectTracker.Core/obj/Debug/net10.0/ProjectTracker.Core.csproj.CoreCompileInputs.cache
+/Users/christopherbarrett/Projects/project-management-system/ProjectTracker.Core/obj/Debug/net10.0/ProjectTracker.Core.sourcelink.json
